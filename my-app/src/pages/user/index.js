@@ -63,6 +63,10 @@ const user = () => {
     [dispatch]
   );
 
+  const onClickDetail = useCallback(() => {
+    history.push(`/user/detail`);
+  }, []);
+
   const ProductComponents = useMemo(
     () =>
       data
@@ -74,7 +78,13 @@ const user = () => {
             <Card
               hoverable
               style={{ width: 285 }}
-              cover={<img alt="example" src={userData.image} />}
+              cover={
+                <img
+                  alt="example"
+                  src={userData.image}
+                  onClick={onClickDetail}
+                />
+              }
             >
               {" "}
               <Meta title={userData.name} description={userData.price} />
@@ -102,7 +112,7 @@ const user = () => {
       </Sider>
       <Layout>
         <HeaderUser md={18} lg={18} xl={19} xxl={32}>
-          <Formik onSubmit={handleSubmit}>
+          <Formik onSubmit={handleSubmit} initialValues={initialValues}>
             <Form>
               <Input
                 onChange={handleChange}
@@ -157,5 +167,7 @@ const user = () => {
     </Layout>
   );
 };
+
+const initialValues = { name: "" };
 
 export default user;

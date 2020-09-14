@@ -22,6 +22,12 @@ const routes = [
     private: false,
   },
   {
+    path: "/user/detail",
+    component: lazy(() => import("@zef/pages/detail")),
+    exact: true,
+    private: false,
+  },
+  {
     path: "/register",
     component: lazy(() => import("@zef/pages/register")),
     exact: true,
