@@ -52,9 +52,9 @@ const user = () => {
     history.push(`/user/`);
   }, []);
 
-  const onclickNewProduct = () => {
-    history.push(`/user/`);
-  };
+  const onclickNewProduct = useCallback(() => {
+    history.push(`/user/detail`);
+  }, []);
 
   const onchangeLanguage = useCallback(
     (e) => {
@@ -64,7 +64,7 @@ const user = () => {
   );
 
   const onClickDetail = useCallback(() => {
-    history.push(`/user/detail`);
+    history.push(`/user/`);
   }, []);
 
   const ProductComponents = useMemo(
@@ -78,6 +78,7 @@ const user = () => {
             <Card
               hoverable
               style={{ width: 285 }}
+              onClick={() => history.push(`/user/detail/${userData.name}`)}
               cover={
                 <img
                   alt="example"
@@ -162,7 +163,6 @@ const user = () => {
       </Layout>
       <Sider>
         <div style={{ height: 64, width: 200 }}>LOGO</div>
-        <MenuLeft />
       </Sider>
     </Layout>
   );

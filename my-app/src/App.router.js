@@ -22,7 +22,7 @@ const routes = [
     private: false,
   },
   {
-    path: "/user/detail",
+    path: "/user/detail/:detailId",
     component: lazy(() => import("@zef/pages/detail")),
     exact: true,
     private: false,
