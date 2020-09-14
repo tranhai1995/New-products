@@ -6,6 +6,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { CollLeft } from "@zef/pages/user/menu/style";
+import { Radio } from "antd";
 
 const MenuLeft = () => {
   const { SubMenu } = Menu;
@@ -39,9 +40,16 @@ const MenuLeft = () => {
               </span>
             }
           >
-            <Menu.ItemGroup key="g1" title="Apple">
-              <Menu.Item key="1">Option 1</Menu.Item>
-              <Menu.Item key="2">Option 2</Menu.Item>
+            <Menu.ItemGroup key="g2" title="Iphone">
+              <Radio.Group>
+                <Radio value={1}>0 - 10.000.000</Radio>
+                <Radio value={2}>10.000.000 - 20.000.000</Radio>
+                <Radio value={3}>20.000.000 - 30.000.000</Radio>
+                <Radio value={4}>
+                  Trên 30.000.000
+                  {/*{value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}*/}
+                </Radio>
+              </Radio.Group>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g2" title="Sam Sung">
               <Menu.Item key="3">Option 3</Menu.Item>
