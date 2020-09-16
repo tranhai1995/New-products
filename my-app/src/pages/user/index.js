@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo } from "react";
-import { Layout, Input, Menu, Radio } from "antd";
+import { Layout, Input, Menu, Radio, Pagination } from "antd";
 import { useIntl } from "react-intl";
 import { Formik, Form } from "formik";
 import { SearchOutlined } from "@ant-design/icons";
@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { localeSelector } from "@zef/pages/user/selector";
 import { Link } from "react-router-dom";
 import { AiOutlineExport } from "react-icons/ai";
+import { databaseSelector } from "@zef/pages/user/menu/selector";
 
 const { Sider, Footer } = Layout;
 const { Meta } = Card;
@@ -24,21 +25,7 @@ const user = () => {
   const { messages } = useIntl();
   const [search, setSearch] = useState("");
   const locale = useSelector(localeSelector);
-
-  const data = [
-    {
-      name: "iphone 11",
-      price: 111.0,
-    },
-    {
-      name: "iphone 11",
-      price: 111.111222,
-    },
-    {
-      name: "iphone 11",
-      price: 111.111333,
-    },
-  ];
+  const database = useSelector(databaseSelector);
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -69,7 +56,7 @@ const user = () => {
 
   const ProductComponents = useMemo(
     () =>
-      data
+      database
         .filter((userData) =>
           userData.name.toLowerCase().includes(search.toLowerCase())
         )
@@ -92,7 +79,7 @@ const user = () => {
             </Card>
           </div>
         )),
-    [data, search]
+    [database, search]
   );
 
   return (
@@ -158,6 +145,11 @@ const user = () => {
           <div className="card-item" style={{ display: "flex" }}>
             {ProductComponents}
           </div>
+          <Pagination
+            defaultCurrent={1}
+            total={50}
+            style={{ textAlign: "center", marginTop: "20px" }}
+          />
         </ContentStyle>
         <Footer>Footer</Footer>
       </Layout>
