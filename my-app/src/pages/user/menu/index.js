@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Menu, Layout } from "antd";
 import {
   AppstoreOutlined,
-  MailOutlined,
+  SearchOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import { CollLeft } from "@zef/pages/user/menu/style";
@@ -14,6 +14,7 @@ import { data } from "@zef/pages/user/data";
 const MenuLeft = () => {
   const dispatch = useDispatch();
   const [searchPrice, setSearchPrice] = useState("");
+  const [changeName, setChangeName] = useState("");
   const { SubMenu } = Menu;
   const { Sider } = Layout;
   const [collapsedLeft, setCollapsedLeft] = useState(false);
@@ -26,9 +27,23 @@ const MenuLeft = () => {
     console.log(searchPrice);
   };
 
+  const handleChangeName = (e) => {
+    setChangeName(e.target.value);
+    console.log("aae", e.target.value);
+  };
+
   const handleChangeSubmit = useCallback(
     (e) => {
       dispatch(actions.searchPrice({ data: data, searchKey: e.target.value }));
+    },
+    [dispatch]
+  );
+
+  const onClickName = useCallback(
+    (e) => {
+      dispatch(
+        actions.searchName({ data: data, searchSetName: e.target.value })
+      );
     },
     [dispatch]
   );
@@ -52,55 +67,49 @@ const MenuLeft = () => {
             key="sub1"
             title={
               <span>
-                <MailOutlined />
+                <SearchOutlined />
                 <span>Find the Product name</span>
               </span>
             }
           >
-            <Menu.ItemGroup key="g1" title="Filter by price">
+            <Menu.ItemGroup
+              key="g1"
+              title="Filter by price"
+              onChange={handleChange}
+            >
+              <Radio.Group onChange={handleChangeSubmit}>
+                <Radio value="1">Giá Thấp đến Cao</Radio>
+                <Radio value="2">Giá Từ Cao xuống Thấp</Radio>
+              </Radio.Group>
+            </Menu.ItemGroup>
+            <Menu.ItemGroup
+              key="g2"
+              value={changeName}
+              title="Filter by brand"
+              onChange={handleChangeName}
+            >
               <Radio.Group>
-                <Radio
-                  value="1 - 10"
-                  onChange={handleChange}
-                  onClick={handleChangeSubmit}
-                >
-                  1 - 10.000.000
+                <Radio key="3" value="Iphone" onClick={onClickName}>
+                  Iphone
                 </Radio>
-                <Radio
-                  value="10- 200"
-                  onChange={handleChange}
-                  onClick={handleChangeSubmit}
-                >
-                  10.000.000 - 20.000.000
+                <Radio key="4" value="SumSung" onClick={onClickName}>
+                  Sam Sung
                 </Radio>
-                <Radio
-                  value="200 - 3000"
-                  onChange={handleChange}
-                  onClick={handleChangeSubmit}
-                >
-                  20.000.000 - 30.000.000
+                <Radio key="5" value="Oppo" onClick={onClickName}>
+                  Oppo
                 </Radio>
-                <Radio
-                  value="30000"
-                  onChange={handleChange}
-                  onClick={handleChangeSubmit}
-                >
-                  Trên 30.000.000
-                  {/*{value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}*/}
+                <Radio key="6" value="Xiaomi" onClick={onClickName}>
+                  Xiaomi
                 </Radio>
               </Radio.Group>
             </Menu.ItemGroup>
-            <Menu.ItemGroup key="g2" title="Filter by brand">
-              <Menu.Item key="3">Iphone</Menu.Item>
-              <Menu.Item key="4">Sam Sung</Menu.Item>
-            </Menu.ItemGroup>
             <Menu.ItemGroup key="g3" title="Oppo">
-              <Menu.Item key="5">Option 3</Menu.Item>
-              <Menu.Item key="6">Option 4</Menu.Item>
+              <Menu.Item key="10">Option 3</Menu.Item>
+              <Menu.Item key="11">Option 4</Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g4" title="Sonny">
-              <Menu.Item key="7">Option 3</Menu.Item>
-              <Menu.Item key="8">Option 4</Menu.Item>
+              <Menu.Item key="12">Option 3</Menu.Item>
+              <Menu.Item key="13">Option 4</Menu.Item>
             </Menu.ItemGroup>
           </SubMenu>
           <SubMenu

@@ -32,6 +32,16 @@ const routes = [
     component: lazy(() => import("@zef/pages/register")),
     exact: true,
   },
+  {
+    path: "/user/cart",
+    component: lazy(() => import("@zef/pages/cart")),
+    exact: true,
+  },
+  {
+    path: "/403/",
+    component: lazy(() => import("@zef/pages/403")),
+    exact: true,
+  },
 ];
 
 const AppRouter = () => {
