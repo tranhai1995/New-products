@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo } from "react";
-import { Layout, Input, Menu, Radio } from "antd";
+import { Layout, Input, Menu, Radio, Pagination } from "antd";
 import { useIntl } from "react-intl";
 import { Formik, Form } from "formik";
 import { SearchOutlined } from "@ant-design/icons";
@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { localeSelector } from "@zef/pages/user/selector";
 import { Link } from "react-router-dom";
 import { AiOutlineExport } from "react-icons/ai";
+import { databaseSelector } from "@zef/pages/user/menu/selector";
 
 const { Sider, Footer } = Layout;
 const { Meta } = Card;
@@ -24,21 +25,7 @@ const user = () => {
   const { messages } = useIntl();
   const [search, setSearch] = useState("");
   const locale = useSelector(localeSelector);
-
-  const data = [
-    {
-      name: "iphone 11",
-      price: 111.0,
-    },
-    {
-      name: "iphone 11",
-      price: 111.111222,
-    },
-    {
-      name: "iphone 11",
-      price: 111.111333,
-    },
-  ];
+  const database = useSelector(databaseSelector);
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -52,9 +39,9 @@ const user = () => {
     history.push(`/user/`);
   }, []);
 
-  const onclickNewProduct = () => {
-    history.push(`/user/`);
-  };
+  const onclickNewProduct = useCallback(() => {
+    history.push(`/user/detail`);
+  }, []);
 
   const onchangeLanguage = useCallback(
     (e) => {
@@ -63,9 +50,13 @@ const user = () => {
     [dispatch]
   );
 
+  const onClickDetail = useCallback(() => {
+    history.push(`/user/`);
+  }, []);
+
   const ProductComponents = useMemo(
     () =>
-      data
+      database
         .filter((userData) =>
           userData.name.toLowerCase().includes(search.toLowerCase())
         )
@@ -74,14 +65,21 @@ const user = () => {
             <Card
               hoverable
               style={{ width: 285 }}
-              cover={<img alt="example" src={userData.image} />}
+              onClick={() => history.push(`/user/detail/${userData.name}`)}
+              cover={
+                <img
+                  alt="example"
+                  src={userData.image}
+                  onClick={onClickDetail}
+                />
+              }
             >
               {" "}
               <Meta title={userData.name} description={userData.price} />
             </Card>
           </div>
         )),
-    [data, search]
+    [database, search]
   );
 
   return (
@@ -102,7 +100,7 @@ const user = () => {
       </Sider>
       <Layout>
         <HeaderUser md={18} lg={18} xl={19} xxl={32}>
-          <Formik onSubmit={handleSubmit}>
+          <Formik onSubmit={handleSubmit} initialValues={initialValues}>
             <Form>
               <Input
                 onChange={handleChange}
@@ -147,15 +145,21 @@ const user = () => {
           <div className="card-item" style={{ display: "flex" }}>
             {ProductComponents}
           </div>
+          <Pagination
+            defaultCurrent={1}
+            total={50}
+            style={{ textAlign: "center", marginTop: "20px" }}
+          />
         </ContentStyle>
         <Footer>Footer</Footer>
       </Layout>
       <Sider>
         <div style={{ height: 64, width: 200 }}>LOGO</div>
-        <MenuLeft />
       </Sider>
     </Layout>
   );
 };
+
+const initialValues = { name: "" };
 
 export default user;

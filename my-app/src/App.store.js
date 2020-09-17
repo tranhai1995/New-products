@@ -5,11 +5,12 @@ import rootSaga from "./App.saga";
 import profileAct from "@zef/pages/profile/reducer";
 import LoginAct from "@zef/pages/logins/actions";
 import localeEN from "./pages/user/reducer";
-
+import searchPrice from "@zef/pages/user/menu/reducer";
 const rootReducer = combineReducers({
   profile: profileAct,
   LoginAct: LoginAct,
   localeEN: localeEN,
+  searchPrice: searchPrice,
 });
 
 const sagaMiddleware = createSagaMiddleware();

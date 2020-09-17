@@ -6,14 +6,32 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { CollLeft } from "@zef/pages/user/menu/style";
+import { Radio } from "antd";
+import { useDispatch } from "react-redux";
+import actions from "@zef/pages/user/menu/actions";
+import { data } from "@zef/pages/user/data";
 
 const MenuLeft = () => {
+  const dispatch = useDispatch();
+  const [searchPrice, setSearchPrice] = useState("");
   const { SubMenu } = Menu;
   const { Sider } = Layout;
   const [collapsedLeft, setCollapsedLeft] = useState(false);
   const onCollapseLeft = useCallback(() => setCollapsedLeft(!collapsedLeft), [
     collapsedLeft,
   ]);
+
+  const handleChange = (e) => {
+    setSearchPrice(e.target.value);
+    console.log(searchPrice);
+  };
+
+  const handleChangeSubmit = useCallback(
+    (e) => {
+      dispatch(actions.searchPrice({ data: data, searchKey: e.target.value }));
+    },
+    [dispatch]
+  );
 
   return (
     <CollLeft className="site-layout">
@@ -39,13 +57,42 @@ const MenuLeft = () => {
               </span>
             }
           >
-            <Menu.ItemGroup key="g1" title="Apple">
-              <Menu.Item key="1">Option 1</Menu.Item>
-              <Menu.Item key="2">Option 2</Menu.Item>
+            <Menu.ItemGroup key="g1" title="Filter by price">
+              <Radio.Group>
+                <Radio
+                  value="1 - 10"
+                  onChange={handleChange}
+                  onClick={handleChangeSubmit}
+                >
+                  1 - 10.000.000
+                </Radio>
+                <Radio
+                  value="10- 200"
+                  onChange={handleChange}
+                  onClick={handleChangeSubmit}
+                >
+                  10.000.000 - 20.000.000
+                </Radio>
+                <Radio
+                  value="200 - 3000"
+                  onChange={handleChange}
+                  onClick={handleChangeSubmit}
+                >
+                  20.000.000 - 30.000.000
+                </Radio>
+                <Radio
+                  value="30000"
+                  onChange={handleChange}
+                  onClick={handleChangeSubmit}
+                >
+                  Trên 30.000.000
+                  {/*{value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}*/}
+                </Radio>
+              </Radio.Group>
             </Menu.ItemGroup>
-            <Menu.ItemGroup key="g2" title="Sam Sung">
-              <Menu.Item key="3">Option 3</Menu.Item>
-              <Menu.Item key="4">Option 4</Menu.Item>
+            <Menu.ItemGroup key="g2" title="Filter by brand">
+              <Menu.Item key="3">Iphone</Menu.Item>
+              <Menu.Item key="4">Sam Sung</Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g3" title="Oppo">
               <Menu.Item key="5">Option 3</Menu.Item>
