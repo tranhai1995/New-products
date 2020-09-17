@@ -1,10 +1,10 @@
 import React, { useCallback, useState, useMemo } from "react";
-import { Layout, Input, Menu, Radio, Pagination } from "antd";
+import { Layout, Input, Menu, Radio, Pagination, Button } from "antd";
 import { useIntl } from "react-intl";
 import { Formik, Form } from "formik";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import { Card } from "antd";
+import { Card, Badge } from "antd";
 
 import { HeaderUser, ContentStyle } from "@zef/pages/user/style";
 import MenuLeft from "@zef/pages/user/menu";
@@ -15,6 +15,7 @@ import { localeSelector } from "@zef/pages/user/selector";
 import { Link } from "react-router-dom";
 import { AiOutlineExport } from "react-icons/ai";
 import { databaseSelector } from "@zef/pages/user/menu/selector";
+import { data } from "@zef/pages/user/data";
 
 const { Sider, Footer } = Layout;
 const { Meta } = Card;
@@ -50,9 +51,9 @@ const user = () => {
     [dispatch]
   );
 
-  const onClickDetail = useCallback(() => {
-    history.push(`/user/`);
-  }, []);
+  const handleChangeCart = useCallback(() => {
+    dispatch(actions.getCard({ data: data }));
+  }, [dispatch]);
 
   const ProductComponents = useMemo(
     () =>
@@ -65,17 +66,19 @@ const user = () => {
             <Card
               hoverable
               style={{ width: 285 }}
-              onClick={() => history.push(`/user/detail/${userData.name}`)}
               cover={
                 <img
                   alt="example"
                   src={userData.image}
-                  onClick={onClickDetail}
+                  onClick={() => history.push(`/user/detail/${userData.name}`)}
                 />
               }
             >
               {" "}
               <Meta title={userData.name} description={userData.price} />
+              <Button type="primary" onClick={handleChangeCart}>
+                Card
+              </Button>
             </Card>
           </div>
         )),
@@ -128,10 +131,16 @@ const user = () => {
               <Radio.Button value="ja-JP">日本語</Radio.Button>
             </Radio.Group>
           </div>
-          <div style={{ marginLeft: 50 }}>
-            <Link to="/">{messages["Cart"]}</Link>
+          <div style={{ marginLeft: 25 }}>
+            <Badge count={5} offset={[10]}>
+              <Link to="/user/cart">
+                {messages["Card"]}
+                &nbsp;
+                <ShoppingCartOutlined />
+              </Link>
+            </Badge>
           </div>
-          <span style={{ marginLeft: 50 }}>
+          <span style={{ marginLeft: 25 }}>
             <Link to="/">
               {messages["LOGOUT"]}
               &nbsp; <AiOutlineExport />

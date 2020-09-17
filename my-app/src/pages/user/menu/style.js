@@ -10,4 +10,10 @@ export const CollLeft = styled(Layout)`
     display: block;
     height: 30px;
   }
+  .ant-btn {
+    width: calc(100%);
+  }
+  .anticon-shopping-cart {
+    margin-right: 15px;
+  }
 `;
