@@ -41,4 +41,10 @@ export const data = [
     price: 998989,
     manufacturer: "Xiaomi",
   },
+  {
+    id: "7",
+    name: "Oppo 311",
+    price: 29289,
+    manufacturer: "Oppo",
+  },
 ];

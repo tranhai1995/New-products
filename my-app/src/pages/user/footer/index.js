@@ -1,6 +1,6 @@
 import React from "react";
-
-const Footer = () => {
-  return <div>footer</div>;
+import { LayoutFooter } from "@zef/pages/user/footer/style";
+const footerPages = () => {
+  return <LayoutFooter>Ant Design ©2018 Created by Ant UED</LayoutFooter>;
 };
-export default Footer;
+export default footerPages;
