@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState } from "react";
 import { Layout, Input, Menu, Radio, Pagination, Button } from "antd";
 import { useIntl } from "react-intl";
 import { Formik, Form } from "formik";
@@ -28,6 +28,9 @@ const user = () => {
   const locale = useSelector(localeSelector);
   const database = useSelector(databaseSelector);
 
+  const [minValue, setMinValue] = useState(0);
+  const [maxValue, setMaxValue] = useState(4);
+
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
@@ -55,35 +58,42 @@ const user = () => {
     dispatch(actions.getCard({ data: data }));
   }, [dispatch]);
 
-  const ProductComponents = useMemo(
-    () =>
-      database
-        .filter((userData) =>
-          userData.name.toLowerCase().includes(search.toLowerCase())
-        )
-        .map((userData, index) => (
-          <div key={index} className="item-product">
-            <Card
-              hoverable
-              style={{ width: 285 }}
-              cover={
-                <img
-                  alt="example"
-                  src={userData.image}
-                  onClick={() => history.push(`/user/detail/${userData.name}`)}
-                />
-              }
-            >
-              {" "}
-              <Meta title={userData.name} description={userData.price} />
-              <Button type="primary" onClick={handleChangeCart}>
-                Card
-              </Button>
-            </Card>
-          </div>
-        )),
-    [database, search]
-  );
+  const togglePagination = (value) => {
+    if (value <= 1) {
+      setMinValue(0);
+      setMaxValue(4);
+    } else {
+      setMinValue(4);
+      setMaxValue(value * 4);
+    }
+  };
+
+  const ProductComponents = database
+    .filter((userData) =>
+      userData.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .slice(minValue, maxValue)
+    .map((userData, index) => (
+      <div key={index} className="item-product">
+        <Card
+          hoverable
+          style={{ width: 285 }}
+          cover={
+            <img
+              alt="example"
+              src={userData.image}
+              onClick={() => history.push(`/user/detail/${userData.name}`)}
+            />
+          }
+        >
+          {" "}
+          <Meta title={userData.name} description={userData.price} />
+          <Button type="primary" onClick={handleChangeCart}>
+            Card
+          </Button>
+        </Card>
+      </div>
+    ));
 
   return (
     <Layout>
@@ -156,8 +166,10 @@ const user = () => {
           </div>
           <Pagination
             defaultCurrent={1}
-            total={50}
+            defaultPageSize={4}
+            total={7}
             style={{ textAlign: "center", marginTop: "20px" }}
+            onChange={togglePagination}
           />
         </ContentStyle>
         <Footer>Footer</Footer>
