@@ -1,12 +1,12 @@
-import React, { useCallback, useState, useMemo } from "react";
-import { Layout, Input, Radio, Pagination, Button } from "antd";
+import React, { useCallback, useState } from "react";
+import { Layout, Input, Menu, Radio, Pagination, Button } from "antd";
 import { useIntl } from "react-intl";
 import { Formik, Form } from "formik";
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import { Card, Badge, Tabs } from "antd";
+import { Card, Badge } from "antd";
 
-import { ContentStyle, LayoutWaper } from "@zef/pages/user/style";
+import { HeaderUser, ContentStyle } from "@zef/pages/user/style";
 import MenuLeft from "@zef/pages/user/menu";
 import CarouselCenter from "@zef/pages/user/carousel/index";
 import actions from "@zef/pages/user/actions";
@@ -16,15 +16,9 @@ import { Link } from "react-router-dom";
 import { AiOutlineExport } from "react-icons/ai";
 import { databaseSelector } from "@zef/pages/user/menu/selector";
 import { data } from "@zef/pages/user/data";
-import FooterPages from "@zef/pages/user/footer";
-import Notification from "@zef/pages/user/notification";
-import Accessories from "@zef/pages/user/accessories";
-import NewProducts from "@zef/pages/user/sp";
-import Contact from "@zef/pages/user/contact";
 
-const { Sider } = Layout;
+const { Sider, Footer } = Layout;
 const { Meta } = Card;
-const { TabPane } = Tabs;
 
 const user = () => {
   const dispatch = useDispatch();
@@ -34,6 +28,9 @@ const user = () => {
   const locale = useSelector(localeSelector);
   const database = useSelector(databaseSelector);
 
+  const [minValue, setMinValue] = useState(0);
+  const [maxValue, setMaxValue] = useState(4);
+
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
@@ -41,6 +38,14 @@ const user = () => {
   const handleSubmit = useCallback(() => {
     history.push(`/user/${search}`);
   }, [search]);
+
+  const onclickHome = useCallback(() => {
+    history.push(`/user/`);
+  }, []);
+
+  const onclickNewProduct = useCallback(() => {
+    history.push(`/user/detail`);
+  }, []);
 
   const onchangeLanguage = useCallback(
     (e) => {
@@ -53,78 +58,45 @@ const user = () => {
     dispatch(actions.getCard({ data: data }));
   }, [dispatch]);
 
-  const ProductComponents = useMemo(
-    () =>
-      database
-        .filter((userData) =>
-          userData.name.toLowerCase().includes(search.toLowerCase())
-        )
-        .map((userData, index) => (
-          <div key={index} className="item-product">
-            <Card
-              hoverable
-              style={{ width: 285 }}
-              cover={
-                <img
-                  alt="example"
-                  src={userData.image}
-                  onClick={() => history.push(`/user/detail/${userData.name}`)}
-                />
-              }
-            >
-              {" "}
-              <Meta title={userData.name} description={userData.price} />
-              <Button type="primary" onClick={handleChangeCart}>
-                Card
-              </Button>
-            </Card>
-          </div>
-        )),
-    [database, search]
-  );
-
-  const OperationsSlot = {
-    left: (
-      <Formik onSubmit={handleSubmit} initialValues={initialValues}>
-        <Form>
-          <Input
-            onChange={handleChange}
-            prefix={<SearchOutlined />}
-            placeholder="input search text"
-            style={{ width: 300 }}
-            className="input"
-          />
-        </Form>
-      </Formik>
-    ),
-    right: (
-      <div>
-        <Radio.Group onChange={onchangeLanguage} value={locale}>
-          <Radio.Button value="en-US">English</Radio.Button>
-          <Radio.Button value="ja-JP">日本語</Radio.Button>
-        </Radio.Group>
-
-        <TabPane tab={messages["Contact"]} key="9">
-          <Contact />
-        </TabPane>
-
-        <Badge count={5} offset={[10]}>
-          <Link to="/user/cart" style={{ marginLeft: 50 }}>
-            {messages["Card"]}
-            &nbsp;
-            <ShoppingCartOutlined />
-          </Link>
-        </Badge>
-        <Link to="/" style={{ marginLeft: 50 }}>
-          {messages["LOGOUT"]}
-          &nbsp; <AiOutlineExport />
-        </Link>
-      </div>
-    ),
+  const togglePagination = (value) => {
+    if (value <= 1) {
+      setMinValue(0);
+      setMaxValue(4);
+    } else {
+      setMinValue(4);
+      setMaxValue(value * 4);
+    }
   };
 
+  const ProductComponents = database
+    .filter((userData) =>
+      userData.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .slice(minValue, maxValue)
+    .map((userData, index) => (
+      <div key={index} className="item-product">
+        <Card
+          hoverable
+          style={{ width: 285 }}
+          cover={
+            <img
+              alt="example"
+              src={userData.image}
+              onClick={() => history.push(`/user/detail/${userData.name}`)}
+            />
+          }
+        >
+          {" "}
+          <Meta title={userData.name} description={userData.price} />
+          <Button type="primary" onClick={handleChangeCart}>
+            Card
+          </Button>
+        </Card>
+      </div>
+    ));
+
   return (
-    <LayoutWaper style={{ backgroundColor: "#fff" }}>
+    <Layout>
       <Sider style={{ backgroundColor: "#fff" }}>
         <div
           style={{
@@ -140,42 +112,72 @@ const user = () => {
         <MenuLeft />
       </Sider>
       <Layout>
-        <Tabs defaultActiveKey="1" tabBarExtraContent={OperationsSlot}>
-          <TabPane tab={messages["Home Pages"]} key="1">
-            <ContentStyle>
-              <div>
-                <CarouselCenter />
-              </div>
-              <div>Home</div>
-              <div className="card-item" style={{ display: "flex" }}>
-                {ProductComponents}
-              </div>
-              <Pagination
-                defaultCurrent={1}
-                total={50}
-                style={{ textAlign: "center", lineHeight: "50px" }}
+        <HeaderUser md={18} lg={18} xl={19} xxl={32}>
+          <Formik onSubmit={handleSubmit} initialValues={initialValues}>
+            <Form>
+              <Input
+                onChange={handleChange}
+                prefix={<SearchOutlined />}
+                placeholder="input search text"
+                style={{ width: 400 }}
+                className="input"
               />
-            </ContentStyle>
-          </TabPane>
-          <TabPane tab={messages["New Product"]} key="2">
-            <NewProducts />
-          </TabPane>
-          <TabPane tab={messages["Accessories"]} key="3">
-            <Accessories />
-          </TabPane>
-          <TabPane tab={messages["Notification"]} key="4">
-            <Notification />
-          </TabPane>
-          <TabPane tab={messages["Contact"]} key="5">
-            <Contact />
-          </TabPane>
-        </Tabs>
-        <FooterPages />
+            </Form>
+          </Formik>
+          <Menu mode="horizontal">
+            <Menu.Item key="1" onClick={onclickHome}>
+              {messages["Home Pages"]}
+            </Menu.Item>
+            <Menu.Item key="2" onClick={onclickNewProduct}>
+              {messages["New Product"]}
+            </Menu.Item>
+            <Menu.Item key="3">{messages["Accessories"]}</Menu.Item>
+            <Menu.Item key="4">{messages["Notification"]}</Menu.Item>
+            <Menu.Item key="5">{messages["Contact"]}</Menu.Item>
+          </Menu>
+          <div style={{ marginLeft: 50 }}>
+            <Radio.Group onChange={onchangeLanguage} value={locale}>
+              <Radio.Button value="en-US">English</Radio.Button>
+              <Radio.Button value="ja-JP">日本語</Radio.Button>
+            </Radio.Group>
+          </div>
+          <div style={{ marginLeft: 25 }}>
+            <Badge count={5} offset={[10]}>
+              <Link to="/user/cart">
+                {messages["Card"]}
+                &nbsp;
+                <ShoppingCartOutlined />
+              </Link>
+            </Badge>
+          </div>
+          <span style={{ marginLeft: 25 }}>
+            <Link to="/">
+              {messages["LOGOUT"]}
+              &nbsp; <AiOutlineExport />
+            </Link>
+          </span>
+        </HeaderUser>
+        <ContentStyle>
+          <div>
+            <CarouselCenter />
+          </div>
+          <div className="card-item" style={{ display: "flex" }}>
+            {ProductComponents}
+          </div>
+          <Pagination
+            defaultCurrent={1}
+            defaultPageSize={4}
+            total={7}
+            style={{ textAlign: "center", marginTop: "20px" }}
+            onChange={togglePagination}
+          />
+        </ContentStyle>
+        <Footer>Footer</Footer>
       </Layout>
       <Sider>
         <div style={{ height: 64, width: 200 }}>LOGO</div>
       </Sider>
-    </LayoutWaper>
+    </Layout>
   );
 };
 
