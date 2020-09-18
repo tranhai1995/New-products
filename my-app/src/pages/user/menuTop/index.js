@@ -1,14 +1,10 @@
 import React from "react";
-import { Row, Col, Menu } from "antd";
-import { AudioOutlined } from "@ant-design/icons";
-import Language from "@zef/pages/user/dropdown";
+// import { Row, Col, Menu } from "antd";
+// import { AudioOutlined } from "@ant-design/icons";
+// import Language from "@zef/pages/user/dropdown";
 
 const MenuTop = () => {
-  return (
-    <div >
-
-    </div>
-  );
+  return <div></div>;
 };
 
 // <Menu mode="horizontal">
