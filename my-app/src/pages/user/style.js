@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { Layout, Col } from "antd";
-const { Header, Content } = Layout;
+import { Layout } from "antd";
+const { Content } = Layout;
 
 export const LayoutWaper = styled(Layout)`
   .ant-tabs {
@@ -17,27 +17,53 @@ export const LayoutWaper = styled(Layout)`
   .ant-input-affix-wrapper {
     border-left: 3px solid #00c6d7;
   }
-`;
+  .img-container {
+    position: relative;
+    overflow: hidden;
+    padding: 24px;
+  }
 
-export const HeaderUser = styled(Header)`
-  background-color: #fff !important;
-  display: flex;
-  .logo {
-    width: calc(20% - 164px);
-    height: calc(10%);
-    text-align: center;
-  }
-  .button-right {
-    border-left: 1px solid;
-  }
-  .ant-menu {
-    width: 40%;
-    margin-left: 40px;
-    display: flex;
-    justify-content: center;
-    .ant-menu-item {
-      height: 64px;
+  .img-container {
+    transition: all 0.5s linear;
+    :hover {
+      transform: scale(1.2);
     }
+  }
+
+  .card-btn {
+    letter-spacing: 0;
+  }
+
+  .card-btn:hover,
+  .card-btn:active {
+    letter-spacing: 5px;
+  }
+
+  .card-btn:after,
+  .card-btn:before {
+    backface-visibility: hidden;
+    border: 1px solid rgba(#fff, 0);
+    bottom: 0px;
+    content: " ";
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    transition: all 280ms ease-in-out;
+    width: 0;
+  }
+
+  .card-btn:hover:after,
+  .card-btn:hover:before {
+    backface-visibility: hidden;
+    border-color: #fff;
+    transition: width 350ms ease-in-out;
+    width: 70%;
+  }
+
+  .card-btn:hover:before {
+    bottom: auto;
+    top: 0;
+    width: 70%;
   }
 `;
 
@@ -46,13 +72,9 @@ export const ContentStyle = styled(Content)`
   padding: 5px;
   .card-item {
     flex-wrap: wrap;
+    justify-content: center;
   }
   .item-product {
-    padding: 16px 12px 0px 0px;
+    padding: 16px;
   }
-`;
-
-export const Shop = styled(Col)`
-  margin-left: 100px;
-  margin-top: 8px;
 `;

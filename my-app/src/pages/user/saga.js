@@ -14,9 +14,8 @@ function* addCard({ payload }) {
   const { data } = payload;
   try {
     const userCart = data.map((getId) => {
-      return getId.id;
+      return getId;
     });
-    console.log(userCart);
     yield put(actions.getCardSuccess({ userCart }));
   } catch (e) {
     yield put(actions.getCardFailed({ message: e.message }));

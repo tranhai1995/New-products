@@ -33,7 +33,7 @@ const routes = [
     exact: true,
   },
   {
-    path: "/user/cart",
+    path: "/user/card",
     component: lazy(() => import("@zef/pages/cart")),
     exact: true,
   },

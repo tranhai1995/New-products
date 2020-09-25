@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Menu, Layout } from "antd";
+import { Menu, Layout, Switch } from "antd";
 import {
   AppstoreOutlined,
   SearchOutlined,
@@ -15,6 +15,7 @@ const MenuLeft = () => {
   const dispatch = useDispatch();
   const [searchPrice, setSearchPrice] = useState("");
   const [changeName, setChangeName] = useState("");
+  const [theme, setTheme] = useState("light");
   const { SubMenu } = Menu;
   const { Sider } = Layout;
   const [collapsedLeft, setCollapsedLeft] = useState(false);
@@ -30,6 +31,12 @@ const MenuLeft = () => {
   const handleChangeName = (e) => {
     setChangeName(e.target.value);
     console.log("aae", e.target.value);
+  };
+
+  const changeTheme = (value) => {
+    setTheme({
+      theme: value ? "dark" : "light",
+    });
   };
 
   const handleChangeSubmit = useCallback(
@@ -49,7 +56,7 @@ const MenuLeft = () => {
   );
 
   return (
-    <CollLeft className="site-layout">
+    <CollLeft className="site-layout" style={{ minHeight: "100vh" }}>
       <Sider
         collapsible
         collapsed={collapsedLeft}
@@ -57,8 +64,16 @@ const MenuLeft = () => {
         theme="light"
         className="er-slider-left"
       >
-        <div className="logo" />
+        <div className="logo">LOGO</div>
+        <div style={{ textAlign: "center", padding: 10 }}>
+          <Switch
+            onChange={changeTheme}
+            checkedChildren="dark"
+            unCheckedChildren="light"
+          />
+        </div>
         <Menu
+          theme={theme}
           defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}
           mode="inline"
@@ -73,17 +88,17 @@ const MenuLeft = () => {
             }
           >
             <Menu.ItemGroup
-              key="g1"
+              key="1"
               title="Filter by price"
               onChange={handleChange}
             >
               <Radio.Group onChange={handleChangeSubmit}>
-                <Radio value="1">Giá Thấp đến Cao</Radio>
-                <Radio value="2">Giá Từ Cao xuống Thấp</Radio>
+                <Radio value="1"> From High to Low </Radio>
+                <Radio value="2">From Low to High </Radio>
               </Radio.Group>
             </Menu.ItemGroup>
             <Menu.ItemGroup
-              key="g2"
+              key="2"
               value={changeName}
               title="Filter by brand"
               onChange={handleChangeName}
