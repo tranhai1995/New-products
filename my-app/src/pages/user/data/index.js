@@ -3,6 +3,7 @@ export const data = [
     id: "0",
     name: "iphone 11",
     price: 5,
+    image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
     manufacturer: "Iphone",
   },
   {
@@ -46,5 +47,23 @@ export const data = [
     name: "Oppo 311",
     price: 29289,
     manufacturer: "Oppo",
+  },
+  {
+    id: "8",
+    name: "samsung 311",
+    price: 2389,
+    manufacturer: "SumSung",
+  },
+  {
+    id: "9",
+    name: " Xiaomi 111",
+    price: 45289,
+    manufacturer: "Xiaomi",
+  },
+  {
+    id: "10",
+    name: " Max 111",
+    price: 45289,
+    manufacturer: "SamSung",
   },
 ];

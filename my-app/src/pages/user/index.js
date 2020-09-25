@@ -1,10 +1,19 @@
-import React, { useCallback, useState } from "react";
-import { Layout, Input, Radio, Pagination, Button } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  Layout,
+  Input,
+  Radio,
+  Pagination,
+  Button,
+  Skeleton,
+  Rate,
+  Modal,
+} from "antd";
 import { useIntl } from "react-intl";
 import { Formik, Form } from "formik";
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import { Card, Badge, Tabs } from "antd";
+import { Card, Badge, Tabs, BackTop } from "antd";
 
 import { ContentStyle, LayoutWaper } from "@zef/pages/user/style";
 import MenuLeft from "@zef/pages/user/menu";
@@ -31,15 +40,25 @@ const user = () => {
   const history = useHistory();
   const { messages } = useIntl();
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
   const locale = useSelector(localeSelector);
   const database = useSelector(databaseSelector);
+  const [rate, setRate] = useState(3);
 
   const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(4);
+  const [maxValue, setMaxValue] = useState(10);
+
+  const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading({ loading });
+    }, 2000);
+  });
 
   const handleSubmit = useCallback(() => {
     history.push(`/user/${search}`);
@@ -56,13 +75,23 @@ const user = () => {
     dispatch(actions.getCard({ data: data }));
   }, [dispatch]);
 
+  const onClickRate = useCallback(() => {
+    setRate(rate);
+    Modal.confirm({
+      title: "Confirm",
+      content: `"You want to rate ${rate}-star products"`,
+      okText: "Ok",
+      okCancel: "Cancel",
+    });
+  }, [dispatch]);
+
   const togglePagination = (value) => {
     if (value <= 1) {
       setMinValue(0);
-      setMaxValue(4);
+      setMaxValue(10);
     } else {
-      setMinValue(4);
-      setMaxValue(value * 4);
+      setMinValue(10);
+      setMaxValue(value * 10);
     }
   };
 
@@ -72,25 +101,40 @@ const user = () => {
     )
     .slice(minValue, maxValue)
     .map((userData, index) => (
-      <div key={index} className="item-product">
-        <Card
-          hoverable
-          style={{ width: 285 }}
-          cover={
-            <img
-              alt="example"
-              src={userData.image}
-              onClick={() => history.push(`/user/detail/${userData.name}`)}
-            />
-          }
-        >
-          {" "}
-          <Meta title={userData.name} description={userData.price} />
-          <Button type="primary" onClick={handleChangeCart}>
-            Card
-          </Button>
-        </Card>
-      </div>
+      <Skeleton loading={!loading} avatar active key={index}>
+        <div className="item-product" style={{ textAlign: "center" }}>
+          <Card
+            hoverable
+            style={{ width: 300 }}
+            cover={
+              <img
+                className="img-container"
+                alt="example"
+                src={userData.image}
+                onClick={() => history.push(`/user/detail/${userData.name}`)}
+              />
+            }
+          >
+            {" "}
+            <Meta title={userData.name} description={userData.price} />
+            <div>
+              <Rate tooltips={desc} onChange={onClickRate} />
+              {rate ? (
+                <span className="ant-rate-text">{desc[rate - 1]}</span>
+              ) : (
+                ""
+              )}
+            </div>
+            <Button
+              className="card-btn"
+              type="primary"
+              onClick={handleChangeCart}
+            >
+              Card
+            </Button>
+          </Card>
+        </div>
+      </Skeleton>
     ));
   const OperationsSlot = {
     left: (
@@ -100,8 +144,8 @@ const user = () => {
             onChange={handleChange}
             prefix={<SearchOutlined />}
             placeholder="input search text"
-            style={{ width: 300 }}
             className="input"
+            style={{ width: 350 }}
           />
         </Form>
       </Formik>
@@ -112,10 +156,6 @@ const user = () => {
           <Radio.Button value="en-US">English</Radio.Button>
           <Radio.Button value="ja-JP">日本語</Radio.Button>
         </Radio.Group>
-
-        <TabPane tab={messages["Contact"]} key="9">
-          <Contact />
-        </TabPane>
 
         <Badge count={5} offset={[10]}>
           <Link to="/user/cart" style={{ marginLeft: 50 }}>
@@ -135,17 +175,6 @@ const user = () => {
   return (
     <LayoutWaper style={{ backgroundColor: "#fff" }}>
       <Sider style={{ backgroundColor: "#fff" }}>
-        <div
-          style={{
-            height: 64,
-            width: 200,
-            textAlign: "center",
-            fontSize: 40,
-            backgroundColor: "#fff",
-          }}
-        >
-          LOGO
-        </div>
         <MenuLeft />
       </Sider>
       <Layout>
@@ -161,9 +190,9 @@ const user = () => {
               </div>
               <Pagination
                 defaultCurrent={1}
-                defaultPageSize={4}
-                total={7}
-                style={{ textAlign: "center", marginTop: "20px" }}
+                defaultPageSize={8}
+                total={20}
+                style={{ textAlign: "center", lineHeight: "100px" }}
                 onChange={togglePagination}
               />
             </ContentStyle>
@@ -183,9 +212,22 @@ const user = () => {
         </Tabs>
         <FooterPages />
       </Layout>
-      <Sider>
-        <div style={{ height: 64, width: 200 }}>LOGO</div>
-      </Sider>
+      <BackTop style={{ marginBottom: 20 }}>
+        <div
+          style={{
+            height: 40,
+            width: 40,
+            lineHeight: "40px",
+            borderRadius: 4,
+            backgroundColor: "#1088e9",
+            color: "#fff",
+            textAlign: "center",
+            fontSize: 14,
+          }}
+        >
+          UP
+        </div>
+      </BackTop>
     </LayoutWaper>
   );
 };
